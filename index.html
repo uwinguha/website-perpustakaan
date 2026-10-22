@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Library MAN 2 GRESIK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    
+    <div id="login-screen" class="fixed inset-0 bg-blue-600 flex flex-col items-center justify-center z-[100] text-white">
+        <div class="bg-white text-gray-800 p-8 rounded-xl shadow-2xl max-w-sm w-full text-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" alt="Logo" class="w-20 h-20 mx-auto mb-4">
+            <h1 class="text-2xl font-bold mb-2">E-Library MAN 2 GRESIK</h1>
+            <p class="text-sm text-gray-500 mb-8">Silakan masuk menggunakan akun Google Anda.</p>
+            <button id="btn-login-google" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" class="w-5 h-5 bg-white rounded-full p-0.5">
+                Masuk dengan Google
+            </button>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+        
+        <nav class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" alt="Logo" class="w-10 h-10 bg-white rounded-full p-1 object-contain">
+                <h1 class="text-xl font-bold tracking-tight hidden md:block">E-Library MAN 2 GRESIK</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="btn-baca-ebook" class="bg-green-500 px-3 py-1.5 rounded hover:bg-green-600 transition text-sm font-bold hidden">Lanjutkan Baca</button>
+                <button id="btn-masuk-admin" class="bg-blue-800 px-4 py-1.5 rounded hover:bg-blue-700 transition text-sm">Masuk Admin</button>
+                <button id="btn-keluar-admin" class="bg-red-500 px-4 py-1.5 rounded hover:bg-red-600 transition text-sm hidden">Keluar Admin</button>
+                
+                <div class="flex items-center gap-2 border-l border-blue-400 pl-4">
+                    <img id="user-photo" src="" alt="Profil" class="w-8 h-8 rounded-full border-2 border-white">
+                    <div class="hidden md:block text-sm">
+                        <p id="user-name" class="font-bold leading-tight">Nama Siswa</p>
+                        <button id="btn-logout" class="text-xs text-blue-200 hover:text-white underline">Keluar (Logout)</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="view-siswa" class="container mx-auto p-4 block">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-white p-4 rounded-lg shadow-sm border">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800" id="judul-katalog">Katalog Buku Fisik</h2>
+                    <p class="text-sm text-gray-500" id="deskripsi-katalog">Pesan buku fisik pilihanmu dan ambil dengan Kartu Pelajar.</p>
+                </div>
+                <div class="flex bg-gray-100 p-1 rounded-lg">
+                    <button id="tab-siswa-fisik" class="px-4 py-2 bg-white shadow-sm text-blue-600 rounded-md font-bold text-sm transition">📚 Buku Fisik</button>
+                    <button id="tab-siswa-ebook" class="px-4 py-2 text-gray-600 rounded-md font-bold text-sm transition hover:bg-gray-200">💻 E-Book (PDF)</button>
+                </div>
+            </div>
+
+            <div class="mb-4"><input type="text" id="input-pencarian" placeholder="Cari judul atau penerbit buku..." class="w-full p-3 rounded-lg border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>
+            <div id="kategori-container" class="flex gap-2 overflow-x-auto pb-2 mb-4 hide-scrollbar"></div>
+            <div id="daftar-buku" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </div>
+
+        <div id="view-reader" class="container mx-auto p-4 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <div>
+                        <h2 id="reader-judul" class="text-2xl font-bold text-gray-800">Judul PDF</h2>
+                        <p class="text-sm text-gray-500 mt-1">Sisa Waktu Akses: <span class="font-bold text-orange-500" id="reader-timer">7 Hari</span></p>
+                    </div>
+                    <button id="btn-tutup-reader" class="bg-gray-200 text-gray-700 px-4 py-2 rounded font-bold hover:bg-gray-300">Tutup E-Book</button>
+                </div>
+                <div id="pdf-container" class="w-full h-[60vh] bg-gray-200 rounded-lg flex items-center justify-center mb-4">
+                    <iframe id="pdf-frame" class="w-full h-full rounded-lg" src=""></iframe>
+                </div>
+                <div class="flex justify-between items-center bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-bold text-blue-800">Penanda Terakhir: Hal.</span>
+                        <input type="number" id="input-halaman" class="w-16 p-1 border rounded text-center font-bold text-blue-600" min="1" value="1">
+                        <button id="btn-simpan-bookmark" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 font-bold">Simpan Penanda</button>
+                    </div>
+                    <button id="btn-perpanjang" class="bg-green-500 text-white px-4 py-2 rounded text-sm font-bold hover:bg-green-600 hidden">Perpanjang Akses (7 Hari)</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-admin" class="container mx-auto p-4 hidden">
+            <h2 class="text-2xl font-bold mb-4">Dashboard Admin</h2>
+            <div class="flex gap-2 mb-4">
+                <button id="tab-permintaan" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">Antrean Booking Fisik</button>
+                <button id="tab-kelola" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 font-bold">Kelola Semua Buku</button>
+            </div>
+
+            <div id="section-permintaan" class="bg-white p-4 rounded-lg shadow block overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead><tr class="bg-gray-100 border-b text-gray-600"><th class="p-2">Nama Pemesan</th><th class="p-2">NIS / Kelas</th><th class="p-2">Buku Dipesan</th><th class="p-2 text-center">Status</th><th class="p-2 text-center">Aksi Admin</th></tr></thead>
+                    <tbody id="tabel-permintaan"></tbody>
+                </table>
+            </div>
+
+            <div id="section-kelola" class="bg-white p-4 rounded-lg shadow hidden overflow-x-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-700">Inventaris (Fisik & PDF)</h3>
+                    <button id="btn-tambah-buku" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-bold">+ Tambah Buku Baru</button>
+                </div>
+                <table class="w-full text-left border-collapse">
+                    <thead><tr class="bg-gray-100 border-b text-gray-600"><th class="p-2">Judul & Penerbit</th><th class="p-2">Kategori</th><th class="p-2">Jenis</th><th class="p-2 text-center">Stok / File</th></tr></thead>
+                    <tbody id="tabel-kelola-buku"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="modal-pinjam" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white p-6 rounded-lg w-full max-w-md glass">
+                <h2 id="judul-modal" class="text-xl font-bold mb-2">Booking Buku Fisik</h2>
+                <p id="info-modal" class="text-sm text-gray-600 mb-4 bg-yellow-50 p-2 rounded border border-yellow-200"></p>
+                <form id="form-pinjam">
+                    <input type="hidden" id="pinjam-id-buku">
+                    <div id="form-data-siswa">
+                        <div class="mb-3">
+                            <label class="text-sm font-bold">Nama Lengkap (Sesuai Absen/Identitas Resmi)</label>
+                            <input type="text" id="pinjam-nama" required placeholder="Masukkan nama lengkap Anda" class="w-full border p-2 rounded">
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-sm font-bold">NIS / NIM</label>
+                            <input type="text" id="pinjam-nim" required placeholder="Masukkan NIS/NIM" class="w-full border p-2 rounded">
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-sm font-bold">Kelas</label>
+                            <select id="pinjam-kelas" class="w-full border p-2 rounded">
+                                <option value="X-1">Kelas X-1</option>
+                                <option value="X-2">Kelas X-2</option>
+                                <option value="X-3">Kelas X-3</option>
+                                <option value="X-4">Kelas X-4</option>
+                                <option value="X-5">Kelas X-5</option>
+                                <option value="X-6">Kelas X-6</option>
+                                <option value="X-7">Kelas X-7</option>
+                                <option value="X-8">Kelas X-8</option>
+                                <option value="X-9">Kelas X-9</option>
+                                <option value="X-10">Kelas X-10</option>
+                                <option value="X-11">Kelas X-11</option>
+                                <option value="X-12">Kelas X-12</option>
+                                <option value="XI-1">Kelas XI-1</option>
+                                <option value="XI-2">Kelas XI-2</option>
+                                <option value="XI-3">Kelas XI-3</option>
+                                <option value="XI-4">Kelas XI-4</option>
+                                <option value="XI-5">Kelas XI-5</option>
+                                <option value="XI-6">Kelas XI-6</option>
+                                <option value="XI-7">Kelas XI-7</option>
+                                <option value="XI-8">Kelas XI-8</option>
+                                <option value="XI-9">Kelas XI-9</option>
+                                <option value="XI-10">Kelas XI-10</option>
+                                <option value="XI-11">Kelas XI-11</option>
+                                <option value="XI-12">Kelas XI-12</option>
+                                <option value="XII-1">Kelas XII-1</option>
+                                <option value="XII-2">Kelas XII-2</option>
+                                <option value="XII-3">Kelas XII-3</option>
+                                <option value="XII-4">Kelas XII-4</option>
+                                <option value="XII-5">Kelas XII-5</option>
+                                <option value="XII-6">Kelas XII-6</option>
+                                <option value="XII-7">Kelas XII-7</option>
+                                <option value="XII-8">Kelas XII-8</option>
+                                <option value="XII-9">Kelas XII-9</option>
+                                <option value="XII-10">Kelas XII-10</option>
+                                <option value="XII-11">Kelas XII-11</option>
+                                <option value="XII-12">Kelas XII-12</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button type="button" id="btn-batal-pinjam" class="bg-gray-400 text-white px-4 py-2 rounded font-bold">Batal</button>
+                        <button type="submit" id="btn-submit-pinjam" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">Kirim Pesanan (Booking)</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-tambah" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white p-6 rounded-lg w-full max-w-md glass">
+                <h2 class="text-xl font-bold mb-4">Tambah Buku Ke Sistem</h2>
+                <form id="form-tambah-buku">
+                    <div class="mb-3"><label class="text-sm font-bold">Judul Buku</label><input type="text" id="tambah-judul" required class="w-full border p-2 rounded"></div>
+                    <div class="mb-3"><label class="text-sm font-bold">Penerbit Buku</label><input type="text" id="tambah-penerbit" required placeholder="Contoh: Erlangga" class="w-full border p-2 rounded"></div>
+                    <div class="mb-3"><label class="text-sm font-bold">Kategori</label>
+                        <select id="tambah-kategori" class="w-full border p-2 rounded">
+                            <option value="Agama">Agama</option>
+                            <option value="Sastra">Sastra</option>
+                            <option value="Novel">Novel</option>
+                            <option value="Ilmu Pengetahuan">Ilmu Pengetahuan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="text-sm font-bold">Jenis Buku</label>
+                        <select id="tambah-jenis" class="w-full border p-2 rounded">
+                            <option value="Fisik">Buku Fisik (Rak Perpus)</option>
+                            <option value="E-Book">E-Book (File PDF)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="div-stok"><label class="text-sm font-bold">Jumlah Stok (Buku Fisik)</label><input type="number" id="tambah-stok" value="1" min="1" class="w-full border p-2 rounded"></div>
+                    <div class="mb-3 hidden" id="div-pdf"><label class="text-sm font-bold">URL Link File PDF</label><input type="url" id="tambah-pdf" placeholder="https://..." class="w-full border p-2 rounded"></div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button type="button" id="btn-batal-tambah" class="bg-gray-400 text-white px-4 py-2 rounded font-bold">Batal</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">Simpan Buku</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

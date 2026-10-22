@@ -1,0 +1,18 @@
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+}
+
+#pdf-frame {
+    border: none;
+    background-color: #e5e7eb;
+}
