@@ -244,8 +244,8 @@ const btnMasukAdmin = document.getElementById('btn-masuk-admin');
 const btnKeluarAdmin = document.getElementById('btn-keluar-admin');
 
 btnMasukAdmin.onclick = () => {
-    const pin = prompt('Masukkan PIN Admin: (Ketik: 1234)');
-    if (pin === '1234') {
+    const pin = prompt('Masukkan PIN Admin');
+    if (pin === '429351') {
         document.getElementById('view-siswa').classList.add('hidden');
         document.getElementById('view-reader').classList.add('hidden');
         document.getElementById('btn-baca-ebook').classList.add('hidden');
